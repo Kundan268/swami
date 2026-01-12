@@ -1,10 +1,10 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Book, Language } from '@/lib/types';
 import { getGoogleDriveDownloadUrl, getGoogleDriveViewUrl } from '@/lib/utils';
-import { Download, Calendar, Eye } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
 
 interface BookCardProps {
   book: Book;
@@ -21,19 +21,9 @@ export function BookCard({ book, language }: BookCardProps) {
         <CardTitle className="line-clamp-2 min-h-[4rem] py-3 leading-tight">
           {book.title[language]}
         </CardTitle>
-        <CardDescription className="line-clamp-2 min-h-[3rem] py-3 leading-relaxed">
-          {book.description[language]}
-        </CardDescription>
       </CardHeader>
       
       <CardContent className="flex-1 flex flex-col">
-        <div className="space-y-3 mb-6 py-2">
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
-            <span>{book.year}</span>
-          </div>
-        </div>
-
         <div className="mt-auto space-y-2">
           <Button asChild className="w-full">
             <a

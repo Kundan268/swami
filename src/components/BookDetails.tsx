@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { Book, Language } from '@/lib/types';
 import { getGoogleDriveDownloadUrl, getGoogleDriveViewUrl } from '@/lib/utils';
-import { Download, ArrowLeft, Calendar, Eye } from 'lucide-react';
+import { Download, ArrowLeft, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 interface BookDetailsProps {
@@ -39,7 +39,6 @@ export function BookDetails({ book }: BookDetailsProps) {
       backToCatalog: 'Back to Catalog',
       downloadPdf: 'Download PDF',
       viewOnline: 'View Online',
-      year: 'Year',
       switchLanguage: 'Switch to Marathi Version',
       switchToEnglish: 'Switch to English Version'
     },
@@ -47,7 +46,6 @@ export function BookDetails({ book }: BookDetailsProps) {
       backToCatalog: 'कॅटलॉगवर परत',
       downloadPdf: 'PDF डाउनलोड करा',
       viewOnline: 'ऑनलाइन पहा',
-      year: 'वर्ष',
       switchLanguage: 'मराठी आवृत्तीवर स्विच करा',
       switchToEnglish: 'इंग्रजी आवृत्तीवर स्विच करा'
     }
@@ -73,21 +71,9 @@ export function BookDetails({ book }: BookDetailsProps) {
           <CardTitle className="text-3xl mb-2">
             {book.title[language]}
           </CardTitle>
-          <CardDescription className="text-lg">
-            {book.description[language]}
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Book Metadata */}
-          <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-muted-foreground" />
-            <div>
-              <span className="text-sm text-muted-foreground">{pageContent[language].year}:</span>
-              <p className="font-medium">{book.year}</p>
-            </div>
-          </div>
-
           {/* Language Version Switch */}
           {hasTranslation && (
             <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
