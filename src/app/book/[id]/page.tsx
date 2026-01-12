@@ -4,9 +4,9 @@ import { BookDetails } from '@/components/BookDetails';
 import { Metadata } from 'next';
 
 interface BookPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -17,7 +17,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: BookPageProps): Promise<Metadata> {
-  const book = await getBookById(params.id);
+  const { id } = await params;
+  const book = await getBookById(id);
   
   if (!book) {
     return {
@@ -31,7 +32,8 @@ export async function generateMetadata({ params }: BookPageProps): Promise<Metad
 }
 
 export default async function BookPage({ params }: BookPageProps) {
-  const book = await getBookById(params.id);
+  const { id } = await params;
+  const book = await getBookById(id);
 
   if (!book) {
     notFound();
