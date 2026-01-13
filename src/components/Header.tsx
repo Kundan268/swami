@@ -11,7 +11,7 @@ export function Header({ language }: HeaderProps) {
   const headerContent = {
     en: {
       title: 'Shri Swami Samarth Book Catalog',
-      subtitle: 'hello ji - English & Marathi',
+      subtitle: 'Sacred Knowledge Repository - English & Marathi',
       blessing: 'May the divine wisdom guide your learning journey'
     },
     mr: {
