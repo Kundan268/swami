@@ -2,6 +2,7 @@
 
 import { Language } from '@/lib/types';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface HeaderProps {
   language: Language;
@@ -10,28 +11,24 @@ interface HeaderProps {
 export function Header({ language }: HeaderProps) {
   const headerContent = {
     en: {
-      title: 'Shri Swami Samarth Book Catalog',
-      subtitle: 'Sacred Knowledge Repository - English & Marathi',
-      blessing: 'May the divine wisdom guide your learning journey'
+      title: '||  Shree Swami Samarth  ||'
     },
     mr: {
-      title: 'श्री स्वामी समर्थ पुस्तक कॅटलॉग',
-      subtitle: 'पवित्र ज्ञान भंडार - इंग्रजी आणि मराठी',
-      blessing: 'दिव्य ज्ञान तुमच्या शिक्षण प्रवासाला मार्गदर्शन करो'
+      title: '|| श्री स्वामी समर्थ ||'
     }
   };
 
   const content = headerContent[language];
 
   return (
-    <div className="relative border-b border-orange-200 overflow-hidden">
+    <div className="relative border-b border-orange-200 overflow-hidden min-h-[320px] md:min-h-[380px] lg:min-h-[480px] xl:min-h-[55vh]">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
           src="/data/IMG-20250918-WA0001.jpg"
           alt="Sacred Background"
           fill
-          className="object-cover"
+          className="object-cover object-right md:object-[45%_45%]"
           priority
         />
         {/* Dark overlay for better text readability */}
@@ -45,7 +42,7 @@ export function Header({ language }: HeaderProps) {
         }}></div>
       </div>
 
-      <div className="relative container mx-auto px-4 py-12">
+      <div className="relative container mx-auto px-4 py-12 min-h-[320px] md:min-h-[380px] lg:min-h-[480px] xl:min-h-[55vh] flex flex-col justify-center">
         <div className="flex flex-col lg:flex-row items-center gap-8">
           {/* Image Section */}
           <div className="flex-shrink-0">
@@ -77,16 +74,6 @@ export function Header({ language }: HeaderProps) {
               <h1 className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-300 gradient-text py-4 drop-shadow-lg">
                 {content.title}
               </h1>
-              
-              {/* Subtitle */}
-              <p className="text-lg lg:text-xl text-orange-200 font-medium py-3 drop-shadow-md">
-                {content.subtitle}
-              </p>
-              
-              {/* Blessing */}
-              <p className="text-sm lg:text-base text-orange-100 italic max-w-2xl mx-auto lg:mx-0 py-3 drop-shadow-md">
-                {content.blessing}
-              </p>
 
               {/* Decorative Line */}
               <div className="flex items-center justify-center lg:justify-start gap-4">
@@ -107,6 +94,16 @@ export function Header({ language }: HeaderProps) {
             <div className="w-2 h-2 bg-orange-200 rounded-full opacity-80 shadow-md"></div>
             <div className="w-3 h-3 bg-amber-200 rounded-full opacity-80 shadow-md"></div>
           </div>
+        </div>
+
+        {/* Manogat button */}
+        <div className="mt-6 flex justify-center">
+          <Link
+            href="/manogat"
+            className="inline-block px-6 py-2.5 rounded-lg bg-orange-200/90 hover:bg-orange-300/90 text-orange-900 font-semibold text-sm md:text-base shadow-md hover:shadow-lg transition-all duration-200 border border-orange-300/80"
+          >
+            {language === 'mr' ? 'मनोगत' : 'Manogat'}
+          </Link>
         </div>
       </div>
     </div>

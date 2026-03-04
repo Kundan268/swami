@@ -15,7 +15,7 @@ export function BookLink({ book, language }: BookLinkProps) {
     <a
       href={downloadUrl}
       download
-      className="block py-1.5 text-orange-700 hover:text-orange-900 hover:underline transition-colors duration-200 text-sm leading-relaxed"
+      className="inline-block py-0.5 text-orange-700 hover:text-orange-900 hover:underline transition-colors duration-200 text-sm leading-snug flex-1"
     >
       {book.title[language]}
     </a>

@@ -1,4 +1,8 @@
 import { Book } from './types';
+import type { Category } from './types';
+
+// Category files under /data (one JSON file per category)
+const CATEGORIES: Category[] = ['navshati', 'stotra', 'mantra', 'chalisa'];
 
 // Helper to get the base URL for server-side fetch requests
 const getBaseUrl = () => {
@@ -11,18 +15,19 @@ const getBaseUrl = () => {
 };
 
 export async function getBooks(): Promise<Book[]> {
+  const baseUrl = getBaseUrl();
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/data/index.json`, {
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch books data: ${response.statusText}`);
-    }
-    
-    const books: Book[] = await response.json();
-    return books;
+    const results = await Promise.all(
+      CATEGORIES.map(async (category) => {
+        const response = await fetch(`${baseUrl}/data/${category}.json`, {
+          next: { revalidate: 3600 } // Revalidate every hour
+        });
+        if (!response.ok) return [] as Book[];
+        const books: Book[] = await response.json();
+        return books;
+      })
+    );
+    return results.flat();
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
