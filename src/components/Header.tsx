@@ -43,9 +43,9 @@ export function Header({ language }: HeaderProps) {
       </div>
 
       <div className="relative container mx-auto px-4 py-12 min-h-[320px] md:min-h-[380px] lg:min-h-[480px] xl:min-h-[55vh] flex flex-col justify-center">
-        <div className="flex flex-col lg:flex-row items-center gap-8">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-8">
           {/* Image Section */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 order-2 lg:order-1 ml-2 lg:ml-0">
             <div className="relative">
               {/* Decorative Frame */}
               <div className="absolute -inset-4 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 rounded-full opacity-20 blur-sm"></div>
@@ -66,15 +66,15 @@ export function Header({ language }: HeaderProps) {
           </div>
 
           {/* Text Content */}
-          <div className="flex-1 text-center lg:text-left">
+          <div className="flex-1 order-1 lg:order-2 text-left lg:text-left ml-2 lg:ml-0">
             <div className="space-y-4">
               {/* Main Title */}
-              <h1 className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-300 gradient-text py-4 drop-shadow-lg">
+              <h1 className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-300 gradient-text py-2 lg:py-4 drop-shadow-lg">
                 {content.title}
               </h1>
 
               {/* Decorative Line */}
-              <div className="flex items-center justify-center lg:justify-start gap-4">
+              <div className="flex items-center justify-start gap-4">
                 <div className="h-px bg-gradient-to-r from-orange-200 to-transparent w-16"></div>
                 <div className="w-2 h-2 bg-orange-300 rounded-full shadow-md"></div>
                 <div className="h-px bg-gradient-to-l from-orange-200 to-transparent w-16"></div>
