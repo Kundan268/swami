@@ -62,8 +62,6 @@ export function Header({ language }: HeaderProps) {
               </div>
               
               {/* Decorative Elements */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-400 rounded-full opacity-60"></div>
-              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-amber-400 rounded-full opacity-60"></div>
             </div>
           </div>
 
