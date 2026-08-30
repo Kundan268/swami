@@ -1,25 +1,28 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { CategorySection } from '@/components/CategorySection';
 import { Header } from '@/components/Header';
-import { Book, Language, Category } from '@/lib/types';
-import { getBooks } from '@/lib/data';
+import { Book, BookCatalog, Language, categoryOrder } from '@/lib/types';
 import { BookOpen } from 'lucide-react';
-
-const categoryOrder: Category[] = ['navshati', 'stotra', 'mantra', 'chalisa'];
 
 export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [presentCategories, setPresentCategories] = useState<BookCatalog['presentCategories']>([]);
   const [language, setLanguage] = useState<Language>('mr');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadBooks = async () => {
       try {
-        const booksData = await getBooks();
-        setBooks(booksData);
+        const response = await fetch('/api/books');
+        if (!response.ok) {
+          throw new Error(`Failed to load books: ${response.statusText}`);
+        }
+        const catalog = (await response.json()) as BookCatalog;
+        setBooks(catalog.books ?? []);
+        setPresentCategories(catalog.presentCategories ?? []);
       } catch (error) {
         console.error('Error loading books:', error);
       } finally {
@@ -33,6 +36,11 @@ export default function HomePage() {
   const handleLanguageChange = useCallback((newLanguage: Language) => {
     setLanguage(newLanguage);
   }, []);
+
+  const visibleCategories = useMemo(() => {
+    const present = new Set(presentCategories);
+    return categoryOrder.filter((category) => present.has(category));
+  }, [presentCategories]);
 
   const pageContent = {
     en: {
@@ -67,10 +75,9 @@ export default function HomePage() {
           <LanguageToggle onLanguageChange={handleLanguageChange} />
         </div>
 
-        {/* Categories - 4 Column Grid */}
         <main className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categoryOrder.map((category) => (
+            {visibleCategories.map((category) => (
               <CategorySection
                 key={category}
                 category={category}

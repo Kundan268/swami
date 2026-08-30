@@ -3,6 +3,9 @@ import { getBookById, getBooks } from '@/lib/data';
 import { BookDetails } from '@/components/BookDetails';
 import { Metadata } from 'next';
 
+export const dynamicParams = true;
+export const revalidate = 300;
+
 interface BookPageProps {
   params: Promise<{
     id: string;

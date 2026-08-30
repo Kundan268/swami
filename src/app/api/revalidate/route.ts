@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Secure with secret token - set this in your environment variables
@@ -23,10 +23,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Revalidate home page (where books are listed)
+    revalidateTag('books');
     revalidatePath('/');
-    
-    // Revalidate all dynamic book pages
+    revalidatePath('/api/books');
     revalidatePath('/book/[id]', 'page');
     
     return NextResponse.json({

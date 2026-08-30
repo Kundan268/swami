@@ -4,13 +4,12 @@ A modern, responsive book catalog website built with Next.js 14, supporting both
 
 ## Features
 
-- 🌐 **Bilingual Support**: Full support for English and Marathi languages
-- 🔍 **Fuzzy Search**: Powered by Fuse.js for intelligent search across both languages
-- 📱 **Responsive Design**: Mobile-first design that works on all devices
-- 📚 **Book Management**: Easy to add new books via JSON configuration
-- ⚡ **Performance**: ISR (Incremental Static Regeneration) for fast loading
-- 🎨 **Modern UI**: Built with TailwindCSS and shadcn/ui components
-- 🔗 **Google Drive Integration**: Direct PDF downloads from Google Drive
+- Bilingual support for English and Marathi
+- Fuzzy search powered by Fuse.js
+- Responsive, mobile-first layout
+- Book catalog from Google Drive folders (no JSON/Git for new books)
+- ISR with optional on-demand revalidation
+- Direct PDF view and download from Google Drive
 
 ## Tech Stack
 
@@ -26,7 +25,7 @@ A modern, responsive book catalog website built with Next.js 14, supporting both
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
@@ -42,12 +41,14 @@ cd book-catalog
 npm install
 ```
 
-3. Run the development server:
+3. Copy `.env.example` to `.env.local` and set `GOOGLE_DRIVE_API_KEY` and `GOOGLE_DRIVE_FOLDER_ID` (see Adding Books). Without these, the app falls back to `public/data/*.json`.
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 
@@ -55,6 +56,8 @@ npm run dev
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── book/[id]/         # Dynamic book details page
+│   ├── api/books/         # Catalog from Drive (JSON fallback)
+│   ├── api/revalidate/    # On-demand cache refresh
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   ├── page.tsx           # Home page
@@ -66,7 +69,8 @@ src/
 │   ├── LanguageToggle.tsx # Language switcher
 │   └── SearchBar.tsx     # Search input component
 └── lib/                  # Utility functions
-    ├── data.ts           # Data fetching functions
+    ├── data.ts           # Catalog fetch (Drive, JSON fallback)
+    ├── drive.ts          # Google Drive folder listing
     ├── language.ts       # Language management
     ├── search.ts         # Search functionality
     ├── types.ts          # TypeScript types
@@ -74,46 +78,51 @@ src/
 
 public/
 └── data/
-    └── index.json        # Book metadata (can be replaced with Google Sheet)
+    └── *.json            # JSON fallback if Drive is not configured
 ```
 
 ## Adding Books
 
-Books are managed through the `public/data/index.json` file. Each book entry should follow this structure:
+The catalog is the **Shreeswami** Google Drive folder. Upload a PDF into the right category folder. No JSON edit, Git push, or file-ID copy is required.
 
-```json
-{
-  "id": "unique-book-id",
-  "title": {
-    "en": "English Title",
-    "mr": "मराठी शीर्षक"
-  },
-  "description": {
-    "en": "English description",
-    "mr": "मराठी वर्णन"
-  },
-  "author": {
-    "en": "Author Name",
-    "mr": "लेखकाचे नाव"
-  },
-  "translations": {
-    "en": "google-drive-file-id-english",
-    "mr": "google-drive-file-id-marathi"
-  },
-  "year": 2024,
-  "tags": {
-    "en": ["tag1", "tag2"],
-    "mr": ["टॅग1", "टॅग2"]
-  }
-}
+### One-time Drive setup
+
+1. Keep this folder layout (names must match, case-insensitive):
+
+   - `Shreeswami / All Navshati`
+   - `Shreeswami / All Stotra`
+   - `Shreeswami / All Kawach`
+   - `Shreeswami / All Chalisa`
+   - `Shreeswami / All Mantra` (optional; create later when you want a Mantra column)
+
+2. Share **Shreeswami** as **Anyone with the link → Viewer** and apply to all items. New PDFs inherit this.
+
+3. In [Google Cloud Console](https://console.cloud.google.com/): create a project, enable **Google Drive API**, create an **API key** restricted to that API.
+
+4. Set Vercel (and `.env.local`) variables:
+
+   - `GOOGLE_DRIVE_FOLDER_ID` — ID from `https://drive.google.com/drive/folders/FOLDER_ID`
+   - `GOOGLE_DRIVE_API_KEY`
+   - `REVALIDATE_SECRET` (optional, for instant refresh)
+
+5. Redeploy once.
+
+Home only shows categories that exist on Drive **and** have at least one PDF. Kawach appears now. Mantra appears when you add `All Mantra` and upload files. Remove a folder (or empty it) and that column disappears after refresh.
+
+### Filename = title
+
+- `Hanuman.pdf` → English and Marathi titles both **Hanuman** (one PDF for both languages)
+- `Hanuman__हनुमान.pdf` → English **Hanuman**, Marathi **हनुमान**
+- `aum namo lalbaug raja mantra__ॐ नमो लालबाग राजा मंत्र.pdf` → bilingual titles; use **two** underscores
+- `Hanuman.en.pdf` + `Hanuman.mr.pdf` → paired PDFs for each language
+
+Spaces in Drive names are fine. Leftover `_` or `-` on the English side become spaces.
+
+The site caches the catalog for 5 minutes. For an immediate update after upload:
+
+```bash
+curl -X POST "https://your-domain.com/api/revalidate?secret=YOUR_REVALIDATE_SECRET"
 ```
-
-### Google Drive Setup
-
-1. Upload your PDF files to Google Drive
-2. Make them publicly accessible (Anyone with the link can view)
-3. Get the file ID from the shareable link
-4. Add the file ID to the `translations` field in the JSON
 
 ## Deployment
 
@@ -121,7 +130,8 @@ Books are managed through the `public/data/index.json` file. Each book entry sho
 
 1. Push your code to GitHub
 2. Connect your repository to Vercel
-3. Deploy automatically
+3. Add `GOOGLE_DRIVE_API_KEY`, `GOOGLE_DRIVE_FOLDER_ID`, and optionally `REVALIDATE_SECRET` in the Vercel project environment variables
+4. Deploy automatically
 
 ### Other Platforms
 
@@ -176,7 +186,6 @@ const fuse = new Fuse(books, {
 
 ## Future Enhancements
 
-- [ ] Google Sheets integration for dynamic book management
 - [ ] User authentication and favorites
 - [ ] Advanced filtering (by year, author, tags)
 - [ ] Book recommendations
