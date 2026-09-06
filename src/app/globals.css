@@ -76,4 +76,32 @@
     padding: 0.75rem 0;
     margin: 0.5rem 0;
   }
+
+  /* Thick, always-visible scrollbar for category lists (mobile, tablet, desktop) */
+  .category-scroll {
+    scrollbar-gutter: stable;
+    scrollbar-width: auto;
+    scrollbar-color: #ea580c #fed7aa;
+  }
+
+  .category-scroll::-webkit-scrollbar {
+    width: 14px;
+    -webkit-appearance: none;
+  }
+
+  .category-scroll::-webkit-scrollbar-track {
+    background: #ffedd5;
+    border-radius: 8px;
+  }
+
+  .category-scroll::-webkit-scrollbar-thumb {
+    background: #ea580c;
+    border-radius: 8px;
+    border: 2px solid #ffedd5;
+    min-height: 48px;
+  }
+
+  .category-scroll::-webkit-scrollbar-thumb:hover {
+    background: #c2410c;
+  }
 }
