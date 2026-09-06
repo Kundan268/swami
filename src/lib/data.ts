@@ -3,15 +3,14 @@ import 'server-only';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { isDriveConfigured, listCatalogFromDrive } from './drive';
-import type { Book, BookCatalog, Category } from './types';
-
-const JSON_CATEGORIES: Category[] = ['navshati', 'stotra', 'mantra', 'chalisa'];
+import type { Book, BookCatalog } from './types';
+import { categoryOrder } from './types';
 
 async function getCatalogFromJson(): Promise<BookCatalog> {
   const books: Book[] = [];
-  const presentCategories: Category[] = [];
+  const presentCategories: BookCatalog['presentCategories'] = [];
 
-  for (const category of JSON_CATEGORIES) {
+  for (const category of categoryOrder) {
     try {
       const raw = await readFile(
         join(process.cwd(), 'public', 'data', `${category}.json`),
